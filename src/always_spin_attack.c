@@ -3,18 +3,19 @@
 #include "recomputils.h"
 #include "recompconfig.h"
 
-// Patches a function in the base game that's used to check if the player should quickspin.
-RECOMP_PATCH s32 Player_CanSpinAttack(Player* this) {
-    recomp_printf("enum_option: %d\n", recomp_get_config_u32("enum_option"));
-    recomp_printf("number_option: %d\n", recomp_get_config_double("number_option"));
-    char* string_option = recomp_get_config_string("string_option");
-    if (string_option != NULL) {
-        recomp_printf("string_option: %s\n", string_option);
-        recomp_free_config_string(string_option);
-    }
+PlayState* gPlay;
 
-    // Always spin attack.
-    return true;
+RECOMP_HOOK("Message_DrawTextNES") void Message_DrawTextNES_Hook(PlayState* play, Gfx** gfxP, u16 textDrawPos) {
+    gPlay = play;
 }
 
+RECOMP_HOOK_RETURN("Message_DrawTextNES") void Message_DrawTextNES_Return() {
+    MessageContext* msgCtx = &gPlay->msgCtx;
 
+    if (msgCtx->textDelayTimer == 0) {
+        msgCtx->textDrawPos += (recomp_get_config_u32("text_speed") - 1);
+        if (msgCtx->textDrawPos > msgCtx->decodedTextLen) {
+            msgCtx->textDrawPos = msgCtx->decodedTextLen + 1;
+        }
+    }
+}
