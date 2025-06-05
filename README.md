@@ -1,4 +1,8 @@
-# Majora's Mask: Recompiled Mod Template
+# Fast Text
+
+This mod lets you adjust the speed the in-game text appears, allowing dialogue to print much faster than in the original game. The speed is fully configurable.
+
+# Making your own mods
 
 This is an example mod for Majora's Mask: Recompiled that can be used as a template for creating mods. It has a basic build system, headers, sample code, and a mod config toml.
 
